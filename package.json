@@ -1,0 +1,38 @@
+{
+  "name": "anay-desktop",
+  "version": "2.0.0",
+  "private": true,
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently --kill-others-on-fail --success first \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:telegram\" \"wait-on tcp:5173 tcp:8000 --timeout 60s --interval 1000 && electron .\"",
+    "dev:frontend": "npm --prefix frontend run dev -- --host 127.0.0.1 --port 5173",
+    "dev:backend": "node electron/run_backend.js",
+    "dev:telegram": "C:\\Python314\\python.exe backend/telegram_bot.py",
+    "electron": "electron .",
+    "frontend:build": "npm --prefix frontend run build",
+    "build": "npm run frontend:build",
+    "lint": "npm --prefix frontend run lint"
+  },
+  "dependencies": {
+    "electron-store": "^8.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.anay.desktop",
+    "productName": "ANAY Desktop",
+    "files": [
+      "electron/**/*",
+      "frontend/dist/**/*",
+      "backend/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "electron/assets"
+    }
+  }
+}

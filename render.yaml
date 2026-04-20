@@ -1,0 +1,46 @@
+services:
+  # Backend FastAPI Service
+  - type: web
+    name: anay-ai-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    rootDirectory: backend
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DEEPGRAM_API_KEY
+        sync: false
+      - key: SARVAM_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+
+  # Frontend Static Site
+  - type: web
+    name: anay-ai-frontend
+    env: static
+    buildCommand: npm install && npm run build
+    publishPath: dist
+    rootDirectory: frontend
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: anay-ai-backend
+          type: web
+          property: host
+      - key: VITE_WS_URL
+        fromService:
+          name: anay-ai-backend
+          type: web
+          property: host
+          # Note: The host property doesn't include wss:// or /ws, 
+          # but our code handles the fallback or we can manually set it in Render dashboard.
